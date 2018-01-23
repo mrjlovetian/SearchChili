@@ -17,25 +17,33 @@ def getMianUrl(receiveUrl):
     findResult = False
     browser.get(receiveUrl)
     time.sleep(1.5)
-    zhongZiObj = BeautifulSoup(browser.page_source, 'lxml')
-    # print(zhongZiObj)
-    torroentDiv = zhongZiObj.find('div', class_='btsowlist')
 
-    if not torroentDiv is None:
-        findResult = True
-        print("****************", len(torroentDiv))
-        allDivs = torroentDiv.find_all("div", class_='row')
-        for div in allDivs:
-            if not div is None:
-                global result
-                torroentUrl = div.find('a')['href']
-                print('find url ', torroentUrl)
-                torroent = "magnet:?xt=urn:btih:%s"%(torroentUrl[len("http://www.cilizhu2.com/magnet/"):])[:-5]
-                print('find torroent ', torroent)
-                result = result + torroent + "\n"
-                # tkinter.Label(top, text=torroent).pack()
-            # finalTorroent(torroent)
-    else:print("没有找到相关信息!请重试！！！")
+    try:
+        zhongZiObj = BeautifulSoup(browser.page_source, 'lxml')
+        # print(zhongZiObj)
+        torroentDiv = zhongZiObj.find('div', class_='btsowlist')
+
+        if not torroentDiv is None:
+            findResult = True
+            print("****************", len(torroentDiv))
+            allDivs = torroentDiv.find_all("div", class_='row')
+            for div in allDivs:
+                if not div is None:
+                    global result
+                    torroentUrl = div.find('a')['href']
+                    print('find url ', torroentUrl)
+                    torroent = "magnet:?xt=urn:btih:%s" % (torroentUrl[len("http://www.cilizhu2.com/magnet/"):])[:-5]
+                    print('find torroent ', torroent)
+                    result = result + torroent + "\n"
+                    # tkinter.Label(top, text=torroent).pack()
+                    # finalTorroent(torroent)
+        else:
+            print("没有找到相关信息!请重试！！！")
+    except:
+        print("出现异常")
+    finally:
+        browser.close()
+
 
 def writeDown():
     if findResult == True:
@@ -52,4 +60,3 @@ findResult = False
 
 getMianUrl(searchUrl)
 writeDown()
-browser.close()
